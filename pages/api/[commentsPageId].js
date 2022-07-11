@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 function handler(req, res) {
-  const commentId = req.query.commentId;
+  const commentsPageId = req.query.commentsPageId;
 
   if (req.method === "POST") {
     // then take to info provided and send the comment into the collection of comments for this specific page
