@@ -30,7 +30,7 @@ function handler(req, res) {
     const fileData = fs.readFileSync(filePath);
     const data = JSON.parse(fileData);
     res.status(200).json({ comment: data });
-    // then get the comments for this specific page and display the comments
+    // then get the comments for this specific page and display the comments as data
   }
 }
 
