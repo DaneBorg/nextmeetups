@@ -14,6 +14,13 @@ function Comments(props) {
   }
 
   function addCommentHandler(commentData) {
+    fetch("/api/commentsPageId", {
+      method: "POST",
+      body: JSON.stringify(commentData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     // send data to API
   }
 
