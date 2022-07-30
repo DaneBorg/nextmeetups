@@ -23,6 +23,7 @@ function handler(req, res) {
     res.status(201).json({ message: "New entry Added!", newEntry: newEntry });
   } else {
     res.status(200).json({ message: "Get the e-mails saved for newsletter" });
+    // why do I need a else statement here?
   }
 }
 
