@@ -6,7 +6,7 @@ function CommentList(props) {
   const [comments, setComments] = useState([]);
 
   function loadCommentsHandler() {
-    fetch("/api/[commentsPageId]")
+    fetch("/api/comments/[eventId]")
       .then((response) => response.json())
       .then((data) => {
         setComments(data.comment);

@@ -15,7 +15,7 @@ function Comments(props) {
   }
 
   function addCommentHandler(commentData) {
-    fetch("/api/[commentsPageId]", {
+    fetch("/api/comments/[eventId]", {
       method: "POST",
       body: JSON.stringify(commentData),
       headers: {
@@ -26,7 +26,7 @@ function Comments(props) {
   }
 
   function loadCommentsHandler() {
-    fetch("/api/[commentsPageId]")
+    fetch("/api/comments/[eventId]")
       .then((response) => response.json())
       .then((data) => {
         setComments(data.comment);
