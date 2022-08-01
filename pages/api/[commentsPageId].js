@@ -6,13 +6,14 @@ function handler(req, res) {
 
   const email = req.body.email;
   const name = req.body.name;
-  const commentText = req.body.commentText;
+  const commentText = req.body.text;
 
   const newComment = {
     id: new Date().toISOString(),
+    pageId: commentsPageId,
     email: email,
     name: name,
-    commentText: commentText,
+    text: commentText,
   };
 
   if (req.method === "POST") {
@@ -21,9 +22,10 @@ function handler(req, res) {
     const data = JSON.parse(fileData);
     data.push(newComment);
     fs.writeFileSync(filePath, JSON.stringify(data));
-    res
-      .status(201)
-      .json({ message: "New comment recorded!", comment: newComment });
+    res.status(201).json({
+      message: `New comment recorded for page with id:${commentsPageId}!`,
+      comment: newComment,
+    });
     // then take to info provided and send the comment into the collection of comments for this specific page
   } else if (req.method === "GET") {
     const filePath = path.join(process.cwd(), "data", "comments.json");
