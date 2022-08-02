@@ -1,15 +1,21 @@
+import { MongoClient } from "mongodb";
+
 import fs from "fs";
 import path from "path";
 
-function handler(req, res) {
+async function handler(req, res) {
   const eventId = req.query.eventId;
+
+  const client = await MongoClient.connect(
+    "mongodb+srv://stollgart:<password>@nextcluster.3wq4ica.mongodb.net/events?retryWrites=true&w=majority"
+  );
 
   const email = req.body.email;
   const name = req.body.name;
   const commentText = req.body.text;
 
   const newComment = {
-    id: new Date().toISOString(),
+    timeStamp: new Date().toISOString(),
     eventId,
     email: email,
     name: name,
@@ -28,7 +34,15 @@ function handler(req, res) {
       return;
     }
 
+    const db = client.db();
+
+    const result = await db.collection("comments").insertOne(newComment);
+
     console.log(newComment);
+
+    console.log(result);
+
+    newComment.id = result.insertedId;
 
     const filePath = path.join(process.cwd(), "data", "comments.json");
     const fileData = fs.readFileSync(filePath);
@@ -44,9 +58,22 @@ function handler(req, res) {
     const filePath = path.join(process.cwd(), "data", "comments.json");
     const fileData = fs.readFileSync(filePath);
     const data = JSON.parse(fileData);
-    res.status(200).json({ comments: data });
+    // database integration
+    const db = client.db();
+
+    const documents = await db
+      .collection("comments")
+      .find()
+      .sort({ _id: -1 })
+      .toArray();
+
+    res.status(200).json({ comments: documents });
+
+    //res.status(200).json({ comments: data });
     // then get the comments for this specific page and display the comments as data
   }
+
+  client.close();
 }
 
 export default handler;

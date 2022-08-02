@@ -1,7 +1,9 @@
+import { MongoClient } from "mongodb";
+
 import fs from "fs";
 import path from "path";
 
-function handler(req, res) {
+async function handler(req, res) {
   if (req.method === "POST") {
     const email = req.body.email;
 
@@ -9,13 +11,22 @@ function handler(req, res) {
       res.status(422).json({ message: "Invalid email address." });
       return;
     }
-
-    console.log(email);
-
     const newEntry = {
-      id: new Date().toISOString(),
+      timeStamp: new Date().toISOString(),
       email: email,
     };
+
+    const client = await MongoClient.connect(
+      "mongodb+srv://stollgart:<password>@nextcluster.3wq4ica.mongodb.net/events?retryWrites=true&w=majority"
+    );
+    const db = client.db();
+
+    await db.collection("newsletter").insertOne(newEntry);
+
+    client.close();
+
+    console.log(email);
+    console.log(newEntry);
 
     // store the new email entry in the list to a database or a local file
     const filePath = path.join(
